@@ -1,15 +1,15 @@
 # 24solver.py
 # Author: Spencer Ye
 # Last Revised: July 25th, 2024
-# Version: 1.2.1
+# Version: 1.2.2
 
 # Constants to Change
 
 possible_operations = ['+', '-', '*', '/']
 num_operations = len(possible_operations)
 
-minNum = 1
-maxNum = 10
+min_num = 1
+max_num = 10
 
 num_cards = 4
 
@@ -121,10 +121,10 @@ def main ():
 	failed = open(failed_file_name, "w")
 
 	# Cycle through each possible set of numbers
-	for i in range(minNum, maxNum + 1):
-		for j in range(i, maxNum + 1):
-			for k in range(j, maxNum + 1):
-				for l in range(k, maxNum + 1):
+	for i in range(min_num, max_num + 1):
+		for j in range(i, max_num + 1):
+			for k in range(j, max_num + 1):
+				for l in range(k, max_num + 1):
 					
 					# Create array
 					arr = [i, j, k, l]
