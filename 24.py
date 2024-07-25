@@ -1,6 +1,7 @@
 # 24.py
-# 
-#
+# Author: Spencer Ye
+# Last Revised: July 25th, 2024
+# Version: 1.0.1
 
 # Constants to Change
 
@@ -13,6 +14,9 @@ maxNum = 10
 num_cards = 4
 
 margin_error = 0.00001
+
+
+write_to_files = False
 
 success_file_name = "doable.txt"
 failed_file_name = "notdoable.txt"
@@ -67,7 +71,7 @@ def solvable (a,b,c,d):
 			equation = [str(perm[0])] # Add the first number, since all operations are binary.
 
 			# For each possible operation, we decode the operation from i
-			for iteration in range (0, num_cards - 1):
+			for iteration in range (1, num_cards):
 				
 				# Calculate the operation. 
 				# Quick explanation of how this works: If there are n operations and m cards, we cycle through 0 to n ^ (m - 1). Each number decodes a set of operations, the first operation is i % n, the second is i % (n ^ 2) ... the last is i % (n ^ (m - 2)). The modulo operation results in a number between 0 and n - 1 inclusive, which is the index for an operation in our possible_operations array
@@ -94,10 +98,12 @@ def solvable (a,b,c,d):
 
 			# If either value is 24 (or close enough to 24) we accept the number and return True
 			if abs(valOne - 24) <= margin_error:
-				success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + straight + "\n")
+				if (write_to_files):
+					success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + straight + "\n")
 				return True
 			elif abs(valTwo - 24) <= margin_error:
-				success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + join + "\n")
+				if (write_to_files):
+					success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + join + "\n")
 				return True
 	return False
 
