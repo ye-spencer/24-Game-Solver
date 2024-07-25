@@ -1,7 +1,7 @@
 # 24solver.py
 # Author: Spencer Ye
 # Last Revised: July 25th, 2024
-# Version: 1.0.1
+# Version: 1.2.0
 
 # Constants to Change
 
@@ -16,7 +16,7 @@ num_cards = 4
 margin_error = 0.00001
 
 
-write_to_files = False
+write_to_files = True
 
 success_file_name = "doable.txt"
 failed_file_name = "notdoable.txt"
@@ -55,13 +55,15 @@ def permutation(lst):
     return l
 
 # Checks if a given set of 4 cards is solvable or not. If it is solvable, it writes the solution to the doable.txt file
-# Parameters: 	a-d: The card values
+# Parameters: 	cards: The card values
 # 				writing: boolean representing if we are writing or not
+# 				success_file: the file to write to if we succeeded
+# 
 # Returns: True if the set is solvable, false otherwise
-def solvable (a,b,c,d, writing):
+def solvable (cards, writing, success_file):
 
 	# Cycle through each permutation of the numbers
-	for perm in permutation([a,b,c,d]):
+	for perm in permutation(cards):
 
 		# Cycle through the number of possible combinations of operations. There are num_operations of possible operations, and we raise it to the power of the number of slots for operations (One less than the number of cards). Each number codes for a different combination of operations
 		for i in range(0, pow(num_operations, num_cards - 1)):
@@ -100,41 +102,46 @@ def solvable (a,b,c,d, writing):
 			# If either value is 24 (or close enough to 24) we accept the number and return True
 			if abs(valOne - 24) <= margin_error:
 				if (writing):
-					success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + straight + "\n")
+					success_file.write(" ".join(str(x) for x in cards) + "\t" + straight + "\n")
 				return True
 			elif abs(valTwo - 24) <= margin_error:
 				if (writing):
-					success.write(str(a) + ", " + str(b) + ", " + str(c) + ", " + str(d) + "\t" + join + "\n")
+					success_file.write(" ".join(str(x) for x in cards) + "\t" + join + "\n")
 				return True
 	return False
 
 
+# The main function
+def main ():
+	count = 0 # The number of successful solves
+	total = 0 # The total number of solves we attempted
 
-count = 0
-total = 0
+	# Open files
+	success = open(success_file_name, "w")
+	failed = open(failed_file_name, "w")
 
-success = open(success_file_name, "w")
-failed = open(failed_file_name, "w")
+	# Cycle through each possible set of numbers
+	for i in range(minNum, maxNum + 1):
+		for j in range(i, maxNum + 1):
+			for k in range(j, maxNum + 1):
+				for l in range(k, maxNum + 1):
 
-# Cycle through each possible set of numbers
-for i in range(minNum, maxNum + 1):
-	for j in range(i, maxNum + 1):
-		for k in range(j, maxNum + 1):
-			for l in range(k, maxNum + 1):
+					# If it is solvable, increment our count of solved
+					if solvable([i,j,k,l], write_to_files, success):
+						count += 1
+					else:
+						failed.write(str(i) + ", " + str(j) + ", " + str(k) + ", " + str(l) + "\n")
+					
+					total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
+			
+					print("Completed " + str(total) + " sets")
 
-				# If it is solvable, increment our count of solved
-				if solvable(i, j, k, l, write_to_files):
-					count += 1
-				else:
-					failed.write(str(i) + ", " + str(j) + ", " + str(k) + ", " + str(l) + "\n")
-				
-				total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
-		
-				print("Completed " + str(total) + " sets")
+	# Print the final percentage
+	print("Total: %.2f%%" % (count / total * 100))
 
-# Print the final percentage
-print("Total: %.2f%%" % (count / total * 100))
+	# Close files
+	success.close()
+	failed.close()
 
-success.close()
-failed.close()
-
+if __name__ == "__main__":
+	main()
