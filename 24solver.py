@@ -1,7 +1,7 @@
 # 24solver.py
 # Author: Spencer Ye
 # Last Revised: July 25th, 2024
-# Version: 1.2.0
+# Version: 1.2.1
 
 # Constants to Change
 
@@ -102,11 +102,11 @@ def solvable (cards, writing, success_file):
 			# If either value is 24 (or close enough to 24) we accept the number and return True
 			if abs(valOne - 24) <= margin_error:
 				if (writing):
-					success_file.write(" ".join(str(x) for x in cards) + "\t" + straight + "\n")
+					success_file.write("\t".join(str(x) for x in cards) + "\t" + straight + "\n")
 				return True
 			elif abs(valTwo - 24) <= margin_error:
 				if (writing):
-					success_file.write(" ".join(str(x) for x in cards) + "\t" + join + "\n")
+					success_file.write("\t".join(str(x) for x in cards) + "\t" + join + "\n")
 				return True
 	return False
 
@@ -125,12 +125,15 @@ def main ():
 		for j in range(i, maxNum + 1):
 			for k in range(j, maxNum + 1):
 				for l in range(k, maxNum + 1):
+					
+					# Create array
+					arr = [i, j, k, l]
 
 					# If it is solvable, increment our count of solved
-					if solvable([i,j,k,l], write_to_files, success):
+					if solvable(arr, write_to_files, success):
 						count += 1
 					else:
-						failed.write(str(i) + ", " + str(j) + ", " + str(k) + ", " + str(l) + "\n")
+						failed.write("\t".join(str(x) for x in arr) + "\n")
 					
 					total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
 			
