@@ -43,10 +43,22 @@ def main():
 
     time.sleep(5)
 
+    start_time = time.time()
+
     get_driver_image(driver)
+
+    end_time = time.time()
+
+    print(end_time - start_time)
 
     time.sleep(5)
     driver.quit()
+
+
+    # While (true):
+    #   Get numbers from screen
+    #   Deduce the solution
+    #   Move the mouse to all of the correct locations and click
 
 
 
