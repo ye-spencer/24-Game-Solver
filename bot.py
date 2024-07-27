@@ -10,7 +10,10 @@ import cv2
 import base64
 import numpy as np
 
-
+# Parameters:
+#   driver: The web browsers driver
+# Returns:
+#   img: A image of the playing canvas
 def get_driver_image(driver):
     # Identify the canvas
     a = driver.find_element_by_id("canvasID")
@@ -28,8 +31,36 @@ def get_driver_image(driver):
     image = cv2.imdecode(np.frombuffer(cap, np.uint8), 1)
     print(type(image))
 
-    # Testing by writing the result down
-    cv2.imwrite("result.jpg", image) 
+    # # Testing by writing the result down
+    # cv2.imwrite("result.jpg", image) 
+
+    return image
+
+# Parameters:
+#   image: A image of the playing canvas
+# Returns:
+#   nums: The four numbers currently on the screen
+def extract_numbers(image):
+    print(type(image))
+    return []
+
+# Parameters:
+#   nums: The four numbers currently on the screen
+# Returns:
+#   operations: Numbers relating to the button that we need to click to solve the question correctly
+def calculate_moves(nums):
+    print(nums)
+    return []
+
+# Moves the mouse automatically to the correct places based on the operations
+# Parameters:
+#   operations: Numbers relating to the button that we need to click to solve the question correctly
+# Returns:
+#   None
+def move_mouse(operations):
+    print(operations)
+    return
+
 
 def main():
     # Find and print the size of your current computer screen
@@ -43,13 +74,20 @@ def main():
 
     time.sleep(5)
 
-    start_time = time.time()
+    while(True):
+        start_time = time.time()
 
-    get_driver_image(driver)
+        img = get_driver_image(driver)
 
-    end_time = time.time()
+        nums = extract_numbers(img)
 
-    print(end_time - start_time)
+        operations = calculate_moves(nums)
+
+        move_mouse(operations)
+
+        end_time = time.time()
+
+        print(end_time - start_time)
 
     time.sleep(5)
     driver.quit()
