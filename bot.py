@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
-# Last Revised: July 25th, 2024
-# Version: 0.2.1
+# Last Revised: July 27th, 2024
+# Version: 0.3.0
 
 from selenium import webdriver
 import time
@@ -91,12 +91,6 @@ def main():
 
     time.sleep(5)
     driver.quit()
-
-
-    # While (true):
-    #   Get numbers from screen
-    #   Deduce the solution
-    #   Move the mouse to all of the correct locations and click
 
 
 
