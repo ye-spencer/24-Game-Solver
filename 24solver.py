@@ -47,7 +47,7 @@ def permutation(lst):
        # Extract lst[i] or m from the list.  remLst is
        # remaining list
        remLst = lst[:i] + lst[i+1:]
- 
+
        # Generating all permutations where m is first
        # element
        for p in permutation(remLst):
@@ -56,11 +56,9 @@ def permutation(lst):
 
 # Checks if a given set of 4 cards is solvable or not. If it is solvable, it writes the solution to the doable.txt file
 # Parameters: 	cards: The card values
-# 				writing: boolean representing if we are writing or not
-# 				success_file: the file to write to if we succeeded
 # 
-# Returns: True if the set is solvable, false otherwise
-def solvable (cards, writing, success_file):
+# Returns: The operation string to get the answer if there is one; None otherwise
+def solvable (cards):
 
 	# Cycle through each permutation of the numbers
 	for perm in permutation(cards):
@@ -101,14 +99,10 @@ def solvable (cards, writing, success_file):
 
 			# If either value is 24 (or close enough to 24) we accept the number and return True
 			if abs(valOne - 24) <= margin_error:
-				if (writing):
-					success_file.write("\t".join(str(x) for x in cards) + "\t" + straight + "\n")
-				return True
+				return straight
 			elif abs(valTwo - 24) <= margin_error:
-				if (writing):
-					success_file.write("\t".join(str(x) for x in cards) + "\t" + join + "\n")
-				return True
-	return False
+				return join
+	return None
 
 def test_every_combination():
 	count = 0 # The number of successful solves
@@ -128,10 +122,14 @@ def test_every_combination():
 					arr = [i, j, k, l]
 
 					# If it is solvable, increment our count of solved
-					if solvable(arr, write_to_files, success):
+					solutions = solvable(arr)
+					if solutions != None:
 						count += 1
+						if write_to_files:
+							success.write("\t".join(str(x) for x in arr) + "\t" + solutions + "\n")
 					else:
-						failed.write("\t".join(str(x) for x in arr) + "\n")
+						if write_to_files:
+							failed.write("\t".join(str(x) for x in arr) + "\n")
 					
 					total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
 			
@@ -162,10 +160,14 @@ def test_all_hands():
 					arr = [i, j, k, l]
 
 					# If it is solvable, increment our count of solved
-					if solvable(arr, write_to_files, success):
+					solutions = solvable(arr)
+					if solutions != None:
 						count += 1
+						if write_to_files:
+							success.write("\t".join(str(x) for x in arr) + "\t" + solutions + "\n")
 					else:
-						failed.write("\t".join(str(x) for x in arr) + "\n")
+						if write_to_files:
+							failed.write("\t".join(str(x) for x in arr) + "\n")
 					
 					total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
 			
@@ -182,7 +184,7 @@ def test_all_hands():
 # The main function
 def main ():
 	# test_every_combination()
-	# test_all_hands()
+	test_all_hands()
 	return 0
 
 
