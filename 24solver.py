@@ -110,9 +110,7 @@ def solvable (cards, writing, success_file):
 				return True
 	return False
 
-
-# The main function
-def main ():
+def test_every_combination():
 	count = 0 # The number of successful solves
 	total = 0 # The total number of solves we attempted
 
@@ -145,6 +143,48 @@ def main ():
 	# Close files
 	success.close()
 	failed.close()
+
+def test_all_hands():
+	count = 0 # The number of successful solves
+	total = 0 # The total number of solves we attempted
+
+	# Open files
+	success = open(success_file_name, "w")
+	failed = open(failed_file_name, "w")
+
+	# Cycle through each possible set of numbers
+	for i in range(min_num, max_num + 1):
+		for j in range(min_num, max_num + 1):
+			for k in range(min_num, max_num + 1):
+				for l in range(min_num, max_num + 1):
+					
+					# Create array
+					arr = [i, j, k, l]
+
+					# If it is solvable, increment our count of solved
+					if solvable(arr, write_to_files, success):
+						count += 1
+					else:
+						failed.write("\t".join(str(x) for x in arr) + "\n")
+					
+					total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
+			
+					print("Completed " + str(total) + " sets")
+
+	# Print the final percentage
+	print("Total: %.2f%%" % (count / total * 100))
+
+	# Close files
+	success.close()
+	failed.close()
+
+
+# The main function
+def main ():
+	# test_every_combination()
+	# test_all_hands()
+	return 0
+
 
 if __name__ == "__main__":
 	main()
