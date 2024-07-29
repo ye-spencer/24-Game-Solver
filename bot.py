@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 29th, 2024
-# Version: 0.3.1
+# Version: 0.3.2
 
 from selenium import webdriver
 import time
@@ -9,6 +9,7 @@ import pyautogui
 import cv2
 import base64
 import numpy as np
+from pytesseract import image_to_string
 
 
 # CONSTANTS
@@ -87,6 +88,9 @@ def main():
     crop_img = img[TOP_CORNER_FOUR_Y:(TOP_CORNER_FOUR_Y + SIZE_OF_BOX) , TOP_CORNER_FOUR_X:(TOP_CORNER_FOUR_X + SIZE_OF_BOX)]
     cv2.imshow("cropped", crop_img)
     cv2.waitKey(0)
+
+    txt = image_to_string(crop_img, config="--psm 7")
+    print(txt)
 
     exit(0)
 
