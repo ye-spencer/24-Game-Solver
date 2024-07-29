@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
-# Last Revised: July 27th, 2024
-# Version: 0.3.0
+# Last Revised: July 29th, 2024
+# Version: 0.3.1
 
 from selenium import webdriver
 import time
@@ -9,6 +9,18 @@ import pyautogui
 import cv2
 import base64
 import numpy as np
+
+
+# CONSTANTS
+SIZE_OF_BOX = 107
+TOP_CORNER_ONE_X = 13
+TOP_CORNER_ONE_Y = 13
+TOP_CORNER_TWO_X = 13
+TOP_CORNER_TWO_Y = 147
+TOP_CORNER_THREE_X = 147
+TOP_CORNER_THREE_Y = 13
+TOP_CORNER_FOUR_X = 147
+TOP_CORNER_FOUR_Y = 147
 
 # Parameters:
 #   driver: The web browsers driver
@@ -31,8 +43,8 @@ def get_driver_image(driver):
     image = cv2.imdecode(np.frombuffer(cap, np.uint8), 1)
     print(type(image))
 
-    # # Testing by writing the result down
-    # cv2.imwrite("result.jpg", image) 
+    # Testing by writing the result down
+    cv2.imwrite("result.jpg", image) 
 
     return image
 
@@ -65,6 +77,19 @@ def move_mouse(operations):
 def main():
     # Find and print the size of your current computer screen
     print(pyautogui.size())
+
+
+
+    img = cv2.imread('./numbers_test.jpg',0)
+    cv2.imshow('image',img)
+    cv2.waitKey(0)
+
+    crop_img = img[TOP_CORNER_FOUR_Y:(TOP_CORNER_FOUR_Y + SIZE_OF_BOX) , TOP_CORNER_FOUR_X:(TOP_CORNER_FOUR_X + SIZE_OF_BOX)]
+    cv2.imshow("cropped", crop_img)
+    cv2.waitKey(0)
+
+    exit(0)
+
 
     # Instantiate the Chrome Driver
     driver = webdriver.Chrome('drivers/chromedriver.exe')
