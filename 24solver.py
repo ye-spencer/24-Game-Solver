@@ -1,7 +1,7 @@
 # 24solver.py
 # Author: Spencer Ye
-# Last Revised: July 27th, 2024
-# Version: 1.3.1
+# Last Revised: July 29th, 2024
+# Version: 1.3.2
 
 # Constants to Change
 
@@ -84,8 +84,8 @@ def solvable (cards):
 				equation.append(str(perm[iteration]))
 
 			# There are two unique order of operations for each permutation and operation set, which we calculate here
-			straight = "((%s) %s) %s" % (" ".join(equation[0:3]), " ".join(equation[3:5]), " ".join(equation[5:7]))
-			join = "(%s) %s (%s)" % ((" ".join(equation[0:3])), equation[3], (" ".join(equation[4:7])))
+			straight = "( ( ( %s ) %s ) %s )" % (" ".join(equation[0:3]), " ".join(equation[3:5]), " ".join(equation[5:7]))
+			join = "( ( %s ) %s ( %s ) )" % ((" ".join(equation[0:3])), equation[3], (" ".join(equation[4:7])))
 			
 			# Use python's eval function to calculate the value of each expression
 			try:
