@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 29th, 2024
-# Version: 0.3.2
+# Version: 0.4.0
 
 from selenium import webdriver
 import time
@@ -13,15 +13,15 @@ from pytesseract import image_to_string
 
 
 # CONSTANTS
-SIZE_OF_BOX = 107
-TOP_CORNER_ONE_X = 13
-TOP_CORNER_ONE_Y = 13
-TOP_CORNER_TWO_X = 13
-TOP_CORNER_TWO_Y = 147
-TOP_CORNER_THREE_X = 147
-TOP_CORNER_THREE_Y = 13
-TOP_CORNER_FOUR_X = 147
-TOP_CORNER_FOUR_Y = 147
+SIZE_OF_BOX = 100
+TOP_CORNER_ONE_X = 15
+TOP_CORNER_ONE_Y = 15
+TOP_CORNER_TWO_X = 15
+TOP_CORNER_TWO_Y = 150
+TOP_CORNER_THREE_X = 150
+TOP_CORNER_THREE_Y = 15
+TOP_CORNER_FOUR_X = 150
+TOP_CORNER_FOUR_Y = 150
 
 # Parameters:
 #   driver: The web browsers driver
@@ -49,13 +49,35 @@ def get_driver_image(driver):
 
     return image
 
+
 # Parameters:
 #   image: A image of the playing canvas
 # Returns:
 #   nums: The four numbers currently on the screen
 def extract_numbers(image):
-    print(type(image))
-    return []
+    nums = []
+
+    crop_img = image[TOP_CORNER_ONE_Y:(TOP_CORNER_ONE_Y + SIZE_OF_BOX) , TOP_CORNER_ONE_X:(TOP_CORNER_ONE_X + SIZE_OF_BOX)]
+    process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    txt = image_to_string(process_img, config="--psm 7")
+    nums.append(int(txt.strip()))
+
+    crop_img = image[TOP_CORNER_TWO_Y:(TOP_CORNER_TWO_Y + SIZE_OF_BOX) , TOP_CORNER_TWO_X:(TOP_CORNER_TWO_X + SIZE_OF_BOX)]
+    process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    txt = image_to_string(process_img, config="--psm 7")
+    nums.append(int(txt.strip()))
+
+    crop_img = image[TOP_CORNER_THREE_Y:(TOP_CORNER_THREE_Y + SIZE_OF_BOX) , TOP_CORNER_THREE_X:(TOP_CORNER_THREE_X + SIZE_OF_BOX)]
+    process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    txt = image_to_string(process_img, config="--psm 7")
+    nums.append(int(txt.strip()))
+
+    crop_img = image[TOP_CORNER_FOUR_Y:(TOP_CORNER_FOUR_Y + SIZE_OF_BOX) , TOP_CORNER_FOUR_X:(TOP_CORNER_FOUR_X + SIZE_OF_BOX)]
+    process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    txt = image_to_string(process_img, config="--psm 7")
+    nums.append(int(txt.strip()))
+
+    return nums
 
 # Parameters:
 #   nums: The four numbers currently on the screen
@@ -85,12 +107,7 @@ def main():
     cv2.imshow('image',img)
     cv2.waitKey(0)
 
-    crop_img = img[TOP_CORNER_FOUR_Y:(TOP_CORNER_FOUR_Y + SIZE_OF_BOX) , TOP_CORNER_FOUR_X:(TOP_CORNER_FOUR_X + SIZE_OF_BOX)]
-    cv2.imshow("cropped", crop_img)
-    cv2.waitKey(0)
-
-    txt = image_to_string(crop_img, config="--psm 7")
-    print(txt)
+    print(extract_numbers(img))
 
     exit(0)
 
