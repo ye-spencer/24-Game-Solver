@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 29th, 2024
-# Version: 0.4.0
+# Version: 0.4.1
 
 from selenium import webdriver
 import time
@@ -57,21 +57,31 @@ def get_driver_image(driver):
 def extract_numbers(image):
     nums = []
 
+    # Crop the image to the proper box containing the first number
     crop_img = image[TOP_CORNER_ONE_Y:(TOP_CORNER_ONE_Y + SIZE_OF_BOX) , TOP_CORNER_ONE_X:(TOP_CORNER_ONE_X + SIZE_OF_BOX)]
+   
+    # Apply a OTSU binomial threshold to turn turn everything to black or white
     process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+
+    # Read the image, aiming to read the image as a line of text
     txt = image_to_string(process_img, config="--psm 7")
+
+    # Strip the text and turn it into a number
     nums.append(int(txt.strip()))
 
+    # Same steps as above for the second number
     crop_img = image[TOP_CORNER_TWO_Y:(TOP_CORNER_TWO_Y + SIZE_OF_BOX) , TOP_CORNER_TWO_X:(TOP_CORNER_TWO_X + SIZE_OF_BOX)]
     process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     txt = image_to_string(process_img, config="--psm 7")
     nums.append(int(txt.strip()))
 
+    # Same steps as above for the third number
     crop_img = image[TOP_CORNER_THREE_Y:(TOP_CORNER_THREE_Y + SIZE_OF_BOX) , TOP_CORNER_THREE_X:(TOP_CORNER_THREE_X + SIZE_OF_BOX)]
     process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     txt = image_to_string(process_img, config="--psm 7")
     nums.append(int(txt.strip()))
 
+    # Same steps as above for the fourth number
     crop_img = image[TOP_CORNER_FOUR_Y:(TOP_CORNER_FOUR_Y + SIZE_OF_BOX) , TOP_CORNER_FOUR_X:(TOP_CORNER_FOUR_X + SIZE_OF_BOX)]
     process_img = cv2.threshold(crop_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     txt = image_to_string(process_img, config="--psm 7")
@@ -102,14 +112,11 @@ def main():
     print(pyautogui.size())
 
 
+    # # Testing Code for Extract Numbers
+    # img = cv2.imread('./numbers_test.jpg',0)
+    # print(extract_numbers(img))
 
-    img = cv2.imread('./numbers_test.jpg',0)
-    cv2.imshow('image',img)
-    cv2.waitKey(0)
-
-    print(extract_numbers(img))
-
-    exit(0)
+    # exit(0)
 
 
     # Instantiate the Chrome Driver
