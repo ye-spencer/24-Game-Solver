@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.4.5
+# Version: 0.5.0
 
 from selenium import webdriver
 import time
@@ -96,9 +96,11 @@ def extract_numbers(image):
 # Returns:
 #   operations: Numbers relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
-    print(solvable(nums))
     operators = solvable(nums).split(" ")
-    index = len(operators) - 1
+    nums_str = [str(i) for i in nums]
+
+    operators = [str(nums_str.index(ch)) if ch.isdigit() else ch for ch in operators]
+    
     moves = []
     operation_deque = deque()
     for operator in operators:
@@ -108,12 +110,10 @@ def calculate_moves(nums):
             op_two = operation_deque.pop()
             op = operation_deque.pop()
             op_one = operation_deque.pop()
-            val = "(" + op_one + op + op_two + ")"
-            temp = eval(val)
             moves.append(op_one)
             moves.append(op)
             moves.append(op_two)
-            operation_deque.append(str(temp))
+            operation_deque.append(op_two)
         else: 
             operation_deque.append(operator)
     return moves
@@ -139,15 +139,15 @@ def main():
     # exit(0)
 
     # Testing Code for calculate moves
-    temp = [8, 3, 2, 1]
-    temp_str = [str(i) for i in temp]
-    operations = solvable(temp).split(" ")
-    print(operations)
-    oper_temp = [str(temp_str.index(ch)) if ch.isdigit() else ch for ch in operations]
-    print(oper_temp)
-
-    #print(calculate_moves(nums))
-    exit(0)
+    # temp = [8, 3, 2, 1]
+    # temp_str = [str(i) for i in temp]
+    # operations = solvable(temp).split(" ")
+    # print(operations)
+    # oper_temp = [str(temp_str.index(ch)) if ch.isdigit() else ch for ch in operations]
+    # print(oper_temp)
+    # nums = [8, 3, 2, 1]
+    # print(calculate_moves(nums))
+    # exit(0)
 
 
 
