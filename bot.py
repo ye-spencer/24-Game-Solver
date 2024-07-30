@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.4.3
+# Version: 0.4.4
 
 from selenium import webdriver
 import time
@@ -11,6 +11,7 @@ import base64
 import numpy as np
 from pytesseract import image_to_string
 from solver import solvable
+from collections import deque 
 
 
 # CONSTANTS
@@ -96,13 +97,23 @@ def extract_numbers(image):
 #   operations: Numbers relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
     print(solvable(nums))
-    operators = solvable(nums).split(" ")[::-1]
+    operators = solvable(nums).split(" ")
     index = len(operators) - 1
     moves = []
-    while (index >= 0):
-        print(operators[index])
-        index -= 1
-    return operators
+    operation_deque = deque()
+    for operator in operators:
+        if operator == '(':
+            continue
+        elif operator == ')':
+            op_two = operation_deque.pop()
+            op = operation_deque.pop()
+            op_one = operation_deque.pop()
+            val = "(" + op_one + op + op_two + ")"
+            temp = eval(val)
+            operation_deque.append(str(temp))
+        else: 
+            operation_deque.append(operator)
+    return operation_deque
 
 # Moves the mouse automatically to the correct places based on the operations
 # Parameters:
