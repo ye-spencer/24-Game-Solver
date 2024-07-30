@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 1.0.0
+# Version: 1.0.1
 
 from selenium import webdriver
 import time
@@ -140,10 +140,6 @@ def calculate_moves(nums):
             del box_nums[i]
         else:
             temp.append(ch)
-        print(temp)
-        print(nums_str)
-        print(box_nums)
-        print()
 
     operators = temp 
 
