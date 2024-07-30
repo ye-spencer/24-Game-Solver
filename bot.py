@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.5.3
+# Version: 0.5.4
 
 from selenium import webdriver
 import time
@@ -55,6 +55,7 @@ def get_driver_image(driver):
 def extract_numbers(image):
     nums = []
 
+    # Convert the image into gray scale
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
     # Crop the image to the proper box containing the first number
@@ -133,42 +134,68 @@ def calculate_moves(nums):
 # Returns:
 #   None
 def move_mouse(operations):
-    return
+    for operation in operations:
+        if operation == '0':
+            continue
+        elif operation == '1':
+            continue
+        elif operation == '2':
+            continue
+        elif operation == '3':
+            continue
+        elif operation == '+':
+            continue
+        elif operation == '-':
+            continue
+        elif operation == '*':
+            continue
+        elif operation == '/':
+            continue
+        else:
+            print("ERROR UNRECOGNIZED OPERATION IN MOVE MOUSE")
+    # Click submit button
 
 
 def main():
-    # Find and print the size of your current computer screen
-    print(pyautogui.size())
-
-
-    # # Testing Code for Extract Numbers
-    # img = cv2.imread('./numbers_test.jpg',0)
-    # print(extract_numbers(img))
-    # exit(0)
-
-    # Testing Code for calculate moves
-    # temp = [8, 3, 2, 1]
-    # temp_str = [str(i) for i in temp]
-    # operations = solvable(temp).split(" ")
-    # print(operations)
-    # oper_temp = [str(temp_str.index(ch)) if ch.isdigit() else ch for ch in operations]
-    # print(oper_temp)
-    # nums = [8, 3, 2, 1]
-    # print(calculate_moves(nums))
-    # exit(0)
-
-
+    
+    # Find the size of your current computer screen
+    screen_size = pyautogui.size()
+    screen_height = screen_size.height
+    screen_width = screen_size.width
 
     # Instantiate the Chrome Driver
     driver = webdriver.Chrome('drivers/chromedriver.exe')
 
+    driver.maximize_window()
+    window_size = driver.get_window_size()
+    window_height = window_size["height"]
+    window_width = window_size["width"]
+
+    print(screen_width)
+    print(screen_height)
+    print(window_width)
+    print(window_height)
+
     # Open the website
     driver.get('http://4nums.com/')
 
-    time.sleep(5)
+    # Wait three seconds to click start and put mouse in proper position (slightly above and to the left of the top-left corner of canvas)
+    time.sleep(3)
 
-    canvas = driver.find_element_by_id("canvasID")
-    print(canvas.location)
+    CANVAS_SIDE_AVG = (screen_width + screen_height) / (window_width + window_height) * 400
+
+    print("ASSUMED CANVAS SIZE")
+    print(CANVAS_SIDE_AVG)
+
+    standard_x = pyautogui.position().x
+    standard_y = pyautogui.position().y
+
+    while True:
+        pyautogui.moveRel(CANVAS_SIDE_AVG, 0)
+        time.sleep(0.2)
+        pyautogui.moveRel(-1 * CANVAS_SIDE_AVG, 0)
+        time.sleep(0.2)
+
 
     while(True):
         start_time = time.time()
