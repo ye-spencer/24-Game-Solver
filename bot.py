@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.6.0
+# Version: 0.6.1
 
 from selenium import webdriver
 import time
@@ -27,6 +27,22 @@ TOP_CORNER_FOUR_Y = 150
 EST_CANVAS_PIXELS = 400
 BLOCK_0_OFFSET_X = 50
 BLOCK_0_OFFSET_Y = 50
+BLOCK_1_OFFSET_X = 210
+BLOCK_1_OFFSET_Y = 50
+BLOCK_2_OFFSET_X = 210
+BLOCK_2_OFFSET_Y = 50
+BLOCK_3_OFFSET_X = 210
+BLOCK_3_OFFSET_Y = 50
+BLOCK_PLUS_OFFSET_X = 210
+BLOCK_PLUS_OFFSET_Y = 50
+BLOCK_SUB_OFFSET_X = 210
+BLOCK_SUB_OFFSET_Y = 50
+BLOCK_MULT_OFFSET_X = 210
+BLOCK_MULT_OFFSET_Y = 50
+BLOCK_DIV_OFFSET_X = 210
+BLOCK_DIV_OFFSET_Y = 50
+BLOCK_SUBMIT_OFFSET_X = 0
+BLOCK_SUBMIT_OFFSET_Y = 0
 
 # Parameters:
 #   driver: The web browsers driver
@@ -145,26 +161,29 @@ def move_mouse(operations, old_x, old_y, ratio):
     for operation in operations:
         if operation == '0':
             pyautogui.moveRel(BLOCK_0_OFFSET_X * ratio, BLOCK_0_OFFSET_Y * ratio, duration=0.2)
-            pyautogui.click()
-            pyautogui.moveTo(old_x, old_y)
         elif operation == '1':
-            continue
+            pyautogui.moveRel(BLOCK_1_OFFSET_X * ratio, BLOCK_1_OFFSET_Y * ratio, duration=0.2)
         elif operation == '2':
-            continue
+            pyautogui.moveRel(BLOCK_2_OFFSET_X * ratio, BLOCK_2_OFFSET_Y * ratio, duration=0.2)
         elif operation == '3':
-            continue
+            pyautogui.moveRel(BLOCK_3_OFFSET_X * ratio, BLOCK_3_OFFSET_Y * ratio, duration=0.2)
         elif operation == '+':
-            continue
+            pyautogui.moveRel(BLOCK_PLUS_OFFSET_X * ratio, BLOCK_PLUS_OFFSET_Y * ratio, duration=0.2)
         elif operation == '-':
-            continue
+            pyautogui.moveRel(BLOCK_SUB_OFFSET_X * ratio, BLOCK_SUB_OFFSET_Y * ratio, duration=0.2)
         elif operation == '*':
-            continue
+            pyautogui.moveRel(BLOCK_MULT_OFFSET_X * ratio, BLOCK_MULT_OFFSET_Y * ratio, duration=0.2)
         elif operation == '/':
-            continue
+            pyautogui.moveRel(BLOCK_DIV_OFFSET_X * ratio, BLOCK_DIV_OFFSET_Y * ratio, duration=0.2)
         else:
             print("ERROR UNRECOGNIZED OPERATION IN MOVE MOUSE")
+        pyautogui.click()
+        pyautogui.moveTo(old_x, old_y)
+    
     # Click submit button
-
+    pyautogui.moveRel(BLOCK_SUBMIT_OFFSET_X * ratio, BLOCK_SUBMIT_OFFSET_Y * ratio, duration=0.2)
+    pyautogui.click()
+    pyautogui.moveTo(old_x, old_y)
 
 def main():
     
@@ -197,7 +216,7 @@ def main():
     standard_y = pyautogui.position().y
 
     while True:
-        move_mouse(['0'], standard_x, standard_y, CANVAS_SIDE_RATIO)
+        move_mouse(['1'], standard_x, standard_y, CANVAS_SIDE_RATIO)
         time.sleep(1)
 
 
