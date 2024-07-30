@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.4.4
+# Version: 0.4.5
 
 from selenium import webdriver
 import time
@@ -110,10 +110,13 @@ def calculate_moves(nums):
             op_one = operation_deque.pop()
             val = "(" + op_one + op + op_two + ")"
             temp = eval(val)
+            moves.append(op_one)
+            moves.append(op)
+            moves.append(op_two)
             operation_deque.append(str(temp))
         else: 
             operation_deque.append(operator)
-    return operation_deque
+    return moves
 
 # Moves the mouse automatically to the correct places based on the operations
 # Parameters:
@@ -136,9 +139,16 @@ def main():
     # exit(0)
 
     # Testing Code for calculate moves
-    nums = [8, 3, 2, 1]
-    print(calculate_moves(nums))
+    temp = [8, 3, 2, 1]
+    temp_str = [str(i) for i in temp]
+    operations = solvable(temp).split(" ")
+    print(operations)
+    oper_temp = [str(temp_str.index(ch)) if ch.isdigit() else ch for ch in operations]
+    print(oper_temp)
+
+    #print(calculate_moves(nums))
     exit(0)
+
 
 
     # Instantiate the Chrome Driver
