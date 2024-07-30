@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.7.0
+# Version: 1.0.0
 
 from selenium import webdriver
 import time
@@ -12,7 +12,6 @@ import numpy as np
 from pytesseract import image_to_string
 from solver import solvable
 from collections import deque 
-
 
 # CONSTANTS
 SIZE_OF_BOX = 100
@@ -43,8 +42,8 @@ BLOCK_DIV_OFFSET_X = 240
 BLOCK_DIV_OFFSET_Y = 300
 BLOCK_SUBMIT_OFFSET_X = 355
 BLOCK_SUBMIT_OFFSET_Y = 370
-BLOCK_SKIP_OFFSET_X = -1
-BLOCK_SKIP_OFFSET_Y = -1
+BLOCK_SKIP_OFFSET_X = 350
+BLOCK_SKIP_OFFSET_Y = 310
 
 # Parameters:
 #   driver: The web browsers driver
@@ -116,13 +115,16 @@ def extract_numbers(image):
 # Returns:
 #   operations: A list of symbols relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
-    print(nums)
 
+    # Get the solution from the solver
+    solution = solvable(nums)
+
+    # If the solution is None, escape (All are solvable, but there are a few bugs still)
+    if solution == None:
+        return ["skip"]
 
     # Solve the set of numbers and split to get each operator
     operators = solvable(nums).split(" ")
-
-    print(operators)
 
     # Convert the numbers into a string so we can index it later
     nums_str = [str(i) for i in nums]
@@ -176,40 +178,42 @@ def calculate_moves(nums):
 # Returns:
 #   None
 def move_mouse(operations, old_x, old_y, ratio):
-    print(operations)
 
     # For each operation, move to the correct offset, click, and then return
     for operation in operations:
         if operation == '0':
-            pyautogui.moveRel(BLOCK_0_OFFSET_X * ratio, BLOCK_0_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_0_OFFSET_X * ratio, BLOCK_0_OFFSET_Y * ratio, duration=0.1)
         elif operation == '1':
-            pyautogui.moveRel(BLOCK_1_OFFSET_X * ratio, BLOCK_1_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_1_OFFSET_X * ratio, BLOCK_1_OFFSET_Y * ratio, duration=0.1)
         elif operation == '2':
-            pyautogui.moveRel(BLOCK_2_OFFSET_X * ratio, BLOCK_2_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_2_OFFSET_X * ratio, BLOCK_2_OFFSET_Y * ratio, duration=0.1)
         elif operation == '3':
-            pyautogui.moveRel(BLOCK_3_OFFSET_X * ratio, BLOCK_3_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_3_OFFSET_X * ratio, BLOCK_3_OFFSET_Y * ratio, duration=0.1)
         elif operation == '+':
-            pyautogui.moveRel(BLOCK_PLUS_OFFSET_X * ratio, BLOCK_PLUS_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_PLUS_OFFSET_X * ratio, BLOCK_PLUS_OFFSET_Y * ratio, duration=0.1)
         elif operation == '-':
-            pyautogui.moveRel(BLOCK_SUB_OFFSET_X * ratio, BLOCK_SUB_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_SUB_OFFSET_X * ratio, BLOCK_SUB_OFFSET_Y * ratio, duration=0.1)
         elif operation == '*':
-            pyautogui.moveRel(BLOCK_MULT_OFFSET_X * ratio, BLOCK_MULT_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_MULT_OFFSET_X * ratio, BLOCK_MULT_OFFSET_Y * ratio, duration=0.1)
         elif operation == '/':
-            pyautogui.moveRel(BLOCK_DIV_OFFSET_X * ratio, BLOCK_DIV_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.moveRel(BLOCK_DIV_OFFSET_X * ratio, BLOCK_DIV_OFFSET_Y * ratio, duration=0.1)
+        elif operation == 'skip':
+            pyautogui.moveRel(BLOCK_SKIP_OFFSET_X * ratio, BLOCK_SKIP_OFFSET_Y * ratio, duration=0.1)
+            pyautogui.click()
+            pyautogui.moveTo(old_x, old_y)
+            time.sleep(7) # Wait for the instruction to get off the screen
+            return
         else:
             print("ERROR UNRECOGNIZED OPERATION IN MOVE MOUSE")
         pyautogui.click()
         pyautogui.moveTo(old_x, old_y)
     
     # Click submit button
-    pyautogui.moveRel(BLOCK_SUBMIT_OFFSET_X * ratio, BLOCK_SUBMIT_OFFSET_Y * ratio, duration=0.5)
+    pyautogui.moveRel(BLOCK_SUBMIT_OFFSET_X * ratio, BLOCK_SUBMIT_OFFSET_Y * ratio, duration=0.15)
     pyautogui.click()
     pyautogui.moveTo(old_x, old_y)
 
 def main():
-
-    # calculate_moves([5, 2, 13, 1])
-    # exit(0)
     
     # Find the size of the current computer screen
     screen_size = pyautogui.size()
@@ -239,21 +243,19 @@ def main():
     standard_x = pyautogui.position().x
     standard_y = pyautogui.position().y
 
-
     while True:
-        start_time = time.time()
-
+        
+        # Get the drawing on the canvas
         img = get_driver_image(driver)
 
+        # Extract the numbers from the canvas
         nums = extract_numbers(img)
 
+        # Calculate what buttons we have to click to get to 24
         operations = calculate_moves(nums)
 
+        # Move the mouse to click the buttons according to what we have found
         move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_RATIO)
-
-        end_time = time.time()
-
-        print(end_time - start_time)
 
     driver.quit()
 
