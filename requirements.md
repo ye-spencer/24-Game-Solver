@@ -3,3 +3,4 @@ selenium==3.141.0
 pyautogui
 opencv-python
 tesseract
+Chrome Version 127
