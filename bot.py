@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.6.1
+# Version: 0.7.0
 
 from selenium import webdriver
 import time
@@ -29,20 +29,22 @@ BLOCK_0_OFFSET_X = 50
 BLOCK_0_OFFSET_Y = 50
 BLOCK_1_OFFSET_X = 210
 BLOCK_1_OFFSET_Y = 50
-BLOCK_2_OFFSET_X = 210
-BLOCK_2_OFFSET_Y = 50
+BLOCK_2_OFFSET_X = 50
+BLOCK_2_OFFSET_Y = 210
 BLOCK_3_OFFSET_X = 210
-BLOCK_3_OFFSET_Y = 50
-BLOCK_PLUS_OFFSET_X = 210
-BLOCK_PLUS_OFFSET_Y = 50
-BLOCK_SUB_OFFSET_X = 210
-BLOCK_SUB_OFFSET_Y = 50
-BLOCK_MULT_OFFSET_X = 210
-BLOCK_MULT_OFFSET_Y = 50
-BLOCK_DIV_OFFSET_X = 210
-BLOCK_DIV_OFFSET_Y = 50
-BLOCK_SUBMIT_OFFSET_X = 0
-BLOCK_SUBMIT_OFFSET_Y = 0
+BLOCK_3_OFFSET_Y = 210
+BLOCK_PLUS_OFFSET_X = 50
+BLOCK_PLUS_OFFSET_Y = 300
+BLOCK_SUB_OFFSET_X = 110
+BLOCK_SUB_OFFSET_Y = 300
+BLOCK_MULT_OFFSET_X = 170
+BLOCK_MULT_OFFSET_Y = 300
+BLOCK_DIV_OFFSET_X = 240
+BLOCK_DIV_OFFSET_Y = 300
+BLOCK_SUBMIT_OFFSET_X = 355
+BLOCK_SUBMIT_OFFSET_Y = 370
+BLOCK_SKIP_OFFSET_X = -1
+BLOCK_SKIP_OFFSET_Y = -1
 
 # Parameters:
 #   driver: The web browsers driver
@@ -114,16 +116,34 @@ def extract_numbers(image):
 # Returns:
 #   operations: A list of symbols relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
-    
+    print(nums)
+
+
     # Solve the set of numbers and split to get each operator
     operators = solvable(nums).split(" ")
 
+    print(operators)
+
     # Convert the numbers into a string so we can index it later
     nums_str = [str(i) for i in nums]
-
-    # Replace each number with the box number
-    operators = [str(nums_str.index(ch)) if ch.isdigit() else ch for ch in operators]
+    box_nums = ["0", "2", "1", "3"]
     
+    # Replace each number with the box number
+    temp = []
+    for ch in operators:
+        if ch.isdigit():
+            i = nums_str.index(ch)
+            temp.append(box_nums[i])
+            del nums_str[i]
+            del box_nums[i]
+        else:
+            temp.append(ch)
+        print(temp)
+        print(nums_str)
+        print(box_nums)
+        print()
+
+    operators = temp 
 
     moves = []
     operation_deque = deque()
@@ -156,6 +176,7 @@ def calculate_moves(nums):
 # Returns:
 #   None
 def move_mouse(operations, old_x, old_y, ratio):
+    print(operations)
 
     # For each operation, move to the correct offset, click, and then return
     for operation in operations:
@@ -181,11 +202,14 @@ def move_mouse(operations, old_x, old_y, ratio):
         pyautogui.moveTo(old_x, old_y)
     
     # Click submit button
-    pyautogui.moveRel(BLOCK_SUBMIT_OFFSET_X * ratio, BLOCK_SUBMIT_OFFSET_Y * ratio, duration=0.2)
+    pyautogui.moveRel(BLOCK_SUBMIT_OFFSET_X * ratio, BLOCK_SUBMIT_OFFSET_Y * ratio, duration=0.5)
     pyautogui.click()
     pyautogui.moveTo(old_x, old_y)
 
 def main():
+
+    # calculate_moves([5, 2, 13, 1])
+    # exit(0)
     
     # Find the size of the current computer screen
     screen_size = pyautogui.size()
@@ -215,10 +239,6 @@ def main():
     standard_x = pyautogui.position().x
     standard_y = pyautogui.position().y
 
-    while True:
-        move_mouse(['1'], standard_x, standard_y, CANVAS_SIDE_RATIO)
-        time.sleep(1)
-
 
     while True:
         start_time = time.time()
@@ -229,7 +249,7 @@ def main():
 
         operations = calculate_moves(nums)
 
-        move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_AVG)
+        move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_RATIO)
 
         end_time = time.time()
 
