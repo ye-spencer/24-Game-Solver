@@ -62,9 +62,6 @@ def get_driver_image(driver):
     # Convert the byte array into a image array
     image = cv2.imdecode(np.frombuffer(cap, np.uint8), 1)
 
-    # # Testing by writing the result down
-    # cv2.imwrite("result.jpg", image) 
-
     return image
 
 
@@ -200,7 +197,13 @@ def move_mouse(operations, old_x, old_y, ratio):
             time.sleep(7) # Wait for the instruction to get off the screen
             return
         else:
-            print("ERROR UNRECOGNIZED OPERATION IN MOVE MOUSE")
+            print("ERROR UNRECOGNIZED OPERATION IN MOVE MOUSE") # Click SKIP After
+            pyautogui.moveRel(BLOCK_SKIP_OFFSET_X * ratio, BLOCK_SKIP_OFFSET_Y * ratio, duration=0.1)
+            pyautogui.click()
+            pyautogui.moveTo(old_x, old_y)
+            time.sleep(7) # Wait for the instruction to get off the screen
+            return
+
         pyautogui.click()
         pyautogui.moveTo(old_x, old_y)
     
@@ -228,7 +231,6 @@ def main():
     # Calculate the resolution of the canvas by estimating with the window and screen ratios
     CANVAS_SIDE_RATIO = (screen_width + screen_height) / (window_width + window_height)
 
-
     # Open the website
     driver.get('http://4nums.com/')
 
@@ -239,19 +241,29 @@ def main():
     standard_x = pyautogui.position().x
     standard_y = pyautogui.position().y
 
-    while True:
+    cont = True
+
+    while cont:
         
         # Get the drawing on the canvas
-        img = get_driver_image(driver)
+        try:
+            img = get_driver_image(driver)
 
-        # Extract the numbers from the canvas
-        nums = extract_numbers(img)
+            # Extract the numbers from the canvas
+            nums = extract_numbers(img)
 
-        # Calculate what buttons we have to click to get to 24
-        operations = calculate_moves(nums)
+            # Calculate what buttons we have to click to get to 24
+            operations = calculate_moves(nums)
 
-        # Move the mouse to click the buttons according to what we have found
-        move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_RATIO)
+            # Move the mouse to click the buttons according to what we have found
+            move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_RATIO)
+        except ValueError: # Reading is closed, assumed to be intentional
+            cont = False
+        except Exception:
+            print("Unknown Error")
+
+    # Wait to allow user to interact with the end screen
+    time.sleep(30)
 
     driver.quit()
 
