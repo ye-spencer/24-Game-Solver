@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
-# Last Revised: July 29th, 2024
-# Version: 0.4.1
+# Last Revised: July 30th, 2024
+# Version: 0.4.2
 
 from selenium import webdriver
 import time
@@ -10,6 +10,7 @@ import cv2
 import base64
 import numpy as np
 from pytesseract import image_to_string
+from solver import solvable
 
 
 # CONSTANTS

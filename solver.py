@@ -1,7 +1,7 @@
-# 24solver.py
+# solver.py
 # Author: Spencer Ye
-# Last Revised: July 29th, 2024
-# Version: 1.3.2
+# Last Revised: July 30th, 2024
+# Version: 1.3.3
 
 # Constants to Change
 
