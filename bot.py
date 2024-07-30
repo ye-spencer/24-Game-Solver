@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.5.0
+# Version: 0.5.1
 
 from selenium import webdriver
 import time
@@ -94,27 +94,38 @@ def extract_numbers(image):
 # Parameters:
 #   nums: The four numbers currently on the screen
 # Returns:
-#   operations: Numbers relating to the button that we need to click to solve the question correctly
+#   operations: A list of symbols relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
+    
+    # Solve the set of numbers and split to get each operator
     operators = solvable(nums).split(" ")
+
+    # Convert the numbers into a string so we can index it later
     nums_str = [str(i) for i in nums]
 
+    # Replace each number with the box number
     operators = [str(nums_str.index(ch)) if ch.isdigit() else ch for ch in operators]
     
+
     moves = []
     operation_deque = deque()
+
+    # For each symbol
     for operator in operators:
-        if operator == '(':
+        if operator == '(': # Ignore if it is an opening bracket
             continue
-        elif operator == ')':
+        elif operator == ')': # If it is a closing bracket
+            # Pop the last three symbols, which should be two numbers and a operation, and append them to the moves we need to make
             op_two = operation_deque.pop()
             op = operation_deque.pop()
             op_one = operation_deque.pop()
             moves.append(op_one)
             moves.append(op)
             moves.append(op_two)
+
+            # Append the last box, since the new value is now held in that box
             operation_deque.append(op_two)
-        else: 
+        else: # If it is an operator, append it to the operation queue
             operation_deque.append(operator)
     return moves
 
@@ -124,7 +135,6 @@ def calculate_moves(nums):
 # Returns:
 #   None
 def move_mouse(operations):
-    print(operations)
     return
 
 
