@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.5.4
+# Version: 0.6.0
 
 from selenium import webdriver
 import time
@@ -24,6 +24,9 @@ TOP_CORNER_THREE_X = 150
 TOP_CORNER_THREE_Y = 15
 TOP_CORNER_FOUR_X = 150
 TOP_CORNER_FOUR_Y = 150
+EST_CANVAS_PIXELS = 400
+BLOCK_0_OFFSET_X = 50
+BLOCK_0_OFFSET_Y = 50
 
 # Parameters:
 #   driver: The web browsers driver
@@ -131,12 +134,19 @@ def calculate_moves(nums):
 # Moves the mouse automatically to the correct places based on the operations
 # Parameters:
 #   operations: Numbers relating to the button that we need to click to solve the question correctly
+#   old_x: The original x position of the mouse
+#   old_y: The original x position of the mouse
+#   ratio: The estimated ratio between pixels on the window and screen resolution
 # Returns:
 #   None
-def move_mouse(operations):
+def move_mouse(operations, old_x, old_y, ratio):
+
+    # For each operation, move to the correct offset, click, and then return
     for operation in operations:
         if operation == '0':
-            continue
+            pyautogui.moveRel(BLOCK_0_OFFSET_X * ratio, BLOCK_0_OFFSET_Y * ratio, duration=0.2)
+            pyautogui.click()
+            pyautogui.moveTo(old_x, old_y)
         elif operation == '1':
             continue
         elif operation == '2':
@@ -158,7 +168,7 @@ def move_mouse(operations):
 
 def main():
     
-    # Find the size of your current computer screen
+    # Find the size of the current computer screen
     screen_size = pyautogui.size()
     screen_height = screen_size.height
     screen_width = screen_size.width
@@ -166,15 +176,15 @@ def main():
     # Instantiate the Chrome Driver
     driver = webdriver.Chrome('drivers/chromedriver.exe')
 
+    # Find the size of the maximized window screen
     driver.maximize_window()
     window_size = driver.get_window_size()
     window_height = window_size["height"]
     window_width = window_size["width"]
 
-    print(screen_width)
-    print(screen_height)
-    print(window_width)
-    print(window_height)
+    # Calculate the resolution of the canvas by estimating with the window and screen ratios
+    CANVAS_SIDE_RATIO = (screen_width + screen_height) / (window_width + window_height)
+
 
     # Open the website
     driver.get('http://4nums.com/')
@@ -182,22 +192,16 @@ def main():
     # Wait three seconds to click start and put mouse in proper position (slightly above and to the left of the top-left corner of canvas)
     time.sleep(3)
 
-    CANVAS_SIDE_AVG = (screen_width + screen_height) / (window_width + window_height) * 400
-
-    print("ASSUMED CANVAS SIZE")
-    print(CANVAS_SIDE_AVG)
-
+    # Assuming the mouse position is correct, record the spot
     standard_x = pyautogui.position().x
     standard_y = pyautogui.position().y
 
     while True:
-        pyautogui.moveRel(CANVAS_SIDE_AVG, 0)
-        time.sleep(0.2)
-        pyautogui.moveRel(-1 * CANVAS_SIDE_AVG, 0)
-        time.sleep(0.2)
+        move_mouse(['0'], standard_x, standard_y, CANVAS_SIDE_RATIO)
+        time.sleep(1)
 
 
-    while(True):
+    while True:
         start_time = time.time()
 
         img = get_driver_image(driver)
@@ -206,13 +210,12 @@ def main():
 
         operations = calculate_moves(nums)
 
-        move_mouse(operations)
+        move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_AVG)
 
         end_time = time.time()
 
         print(end_time - start_time)
 
-    time.sleep(5)
     driver.quit()
 
 
