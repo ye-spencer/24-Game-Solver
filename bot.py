@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.5.1
+# Version: 0.5.2
 
 from selenium import webdriver
 import time
@@ -32,22 +32,18 @@ TOP_CORNER_FOUR_Y = 150
 def get_driver_image(driver):
     # Identify the canvas
     a = driver.find_element_by_id("canvasID")
-    print(type(a))
 
     # Executes the text as a JavaScript function, which turns the element into a DataURL (a URL that contains data inline) and removes the metadata
     canvas_base64 = driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);", a)
-    print(type(canvas_base64))
 
     # Convert the DataURL away from b64 format
     cap = base64.b64decode(canvas_base64)
-    print(type(cap))
 
     # Convert the byte array into a image array
     image = cv2.imdecode(np.frombuffer(cap, np.uint8), 1)
-    print(type(image))
 
-    # Testing by writing the result down
-    cv2.imwrite("result.jpg", image) 
+    # # Testing by writing the result down
+    # cv2.imwrite("result.jpg", image) 
 
     return image
 
@@ -168,6 +164,9 @@ def main():
     driver.get('http://4nums.com/')
 
     time.sleep(5)
+
+    canvas = driver.find_element_by_id("canvasID")
+    print(canvas.location)
 
     while(True):
         start_time = time.time()
