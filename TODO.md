@@ -9,3 +9,5 @@ Write a scientific paper about why our calculations for solvable are exactly cor
 Create a third type of test that simulates the actual playing of the 24 game
 
 Make all of the documents prettier
+
+Deal with the inefficiencies that arise from the sum/different/product/divident block being selected after operations
