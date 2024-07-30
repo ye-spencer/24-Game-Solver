@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.5.2
+# Version: 0.5.3
 
 from selenium import webdriver
 import time
@@ -54,6 +54,8 @@ def get_driver_image(driver):
 #   nums: The four numbers currently on the screen
 def extract_numbers(image):
     nums = []
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
     # Crop the image to the proper box containing the first number
     crop_img = image[TOP_CORNER_ONE_Y:(TOP_CORNER_ONE_Y + SIZE_OF_BOX) , TOP_CORNER_ONE_X:(TOP_CORNER_ONE_X + SIZE_OF_BOX)]
