@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
 # Last Revised: July 30th, 2024
-# Version: 0.4.2
+# Version: 0.4.3
 
 from selenium import webdriver
 import time
@@ -95,8 +95,14 @@ def extract_numbers(image):
 # Returns:
 #   operations: Numbers relating to the button that we need to click to solve the question correctly
 def calculate_moves(nums):
-    print(nums)
-    return []
+    print(solvable(nums))
+    operators = solvable(nums).split(" ")[::-1]
+    index = len(operators) - 1
+    moves = []
+    while (index >= 0):
+        print(operators[index])
+        index -= 1
+    return operators
 
 # Moves the mouse automatically to the correct places based on the operations
 # Parameters:
@@ -116,8 +122,12 @@ def main():
     # # Testing Code for Extract Numbers
     # img = cv2.imread('./numbers_test.jpg',0)
     # print(extract_numbers(img))
-
     # exit(0)
+
+    # Testing Code for calculate moves
+    nums = [8, 3, 2, 1]
+    print(calculate_moves(nums))
+    exit(0)
 
 
     # Instantiate the Chrome Driver
