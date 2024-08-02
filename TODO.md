@@ -1,15 +1,13 @@
-Find a solution for the few that we still have to skip on
+A project is never truly done, here are some future steps that I, or anyone else, can take to improve this project
 
-Click the button for never show solutions again after the first iteration
+# New Features
+ - Detect when automatic coffee breaks show up and click off them
+ - Click the "never show solutions" button once it shows up
+ - Develop a third testing method that simulates an actual game of '24'
 
-Find an easier way to stop the program
+# Optimizations
+ - Find a better way of closing the program rather than just crashing it
+ - Optimize button clicking, we currently often click a button twice because a box is already selected if it is the sum/difference/product of two numbers previously
 
-Write a scientific paper about why our calculations for solvable are exactly correct
-
-Create a third type of test that simulates the actual playing of the 24 game
-
-Make all of the documents prettier
-
-Deal with the inefficiencies that arise from the sum/different/product/divident block being selected after operations
-
-Deal w anti-cheat, which includes built in coffee breaks
+# Bug Fixes
+ - There is a few problems that are solvable that the program cannot find because of floating point errors or because of integer truncation, not too sure which one
