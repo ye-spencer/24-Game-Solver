@@ -1,7 +1,7 @@
 # bot.py
 # Author: Spencer Ye
-# Last Revised: July 30th, 2024
-# Version: 1.0.2
+# Last Revised: August 2nd, 2024
+# Version: 1.1.0
 
 from selenium import webdriver
 import time
@@ -257,6 +257,10 @@ def main():
 
             # Move the mouse to click the buttons according to what we have found
             move_mouse(operations, standard_x, standard_y, CANVAS_SIDE_RATIO)
+
+            # Pause execution for a bit to avoid botting-detection
+            time.sleep(2.5)
+
         except ValueError: # Reading is closed, assumed to be intentional
             cont = False
         except Exception:
