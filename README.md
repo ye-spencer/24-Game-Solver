@@ -30,3 +30,7 @@ To learn how to the rules of 24 [Click Here]()
 # Example
 
 I recorded the beginning of a run using the `bot.py` below
+
+
+https://github.com/user-attachments/assets/a0a4b9a3-b67f-4758-8956-06d0e01cf65e
+
