@@ -3,7 +3,6 @@ A project is never truly done, here are some future steps that I, or anyone else
 # New Features
  - Detect when automatic coffee breaks show up and click off them
  - Click the "never show solutions" button once it shows up
- - Develop a third testing method that simulates an actual game of '24'
 
 # Optimizations
  - Find a better way of closing the program rather than just crashing it
