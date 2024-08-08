@@ -1,7 +1,7 @@
 # solver.py
 # Author: Spencer Ye
-# Last Revised: July 30th, 2024
-# Version: 1.3.3
+# Last Revised: August 8th, 2024
+# Version: 1.4.0
 
 # Constants to Change
 
@@ -21,7 +21,11 @@ write_to_files = True
 success_file_name = "doable.txt"
 failed_file_name = "notdoable.txt"
 
+total_tests = 10000
+
 # End Constants to Change
+
+import random
 
 # Function taken from Geeksforgeeks.com to calculate the permuations
 def permutation(lst):
@@ -180,11 +184,56 @@ def test_all_hands():
 	success.close()
 	failed.close()
 
+def test_sample():
+	count = 0 # The number of successful solves
+	total = 0 # The total number of solves we attempted
+
+	# Open files
+	success = open(success_file_name, "w")
+	failed = open(failed_file_name, "w")
+
+	# Cycle through each possible set of numbers
+	for test_num in range(0, total_tests):
+		deck = []
+
+		for card in range(min_num, max_num + 1):
+			for k in range(0, num_cards):
+				deck.append(card)
+		
+		random.shuffle(deck)
+		
+		while len(deck) > 0:
+			arr = []
+			for k in range(0, num_cards):
+				arr.append(deck.pop())
+					
+			solutions = solvable(arr)
+			if solutions != None:
+				count += 1
+				if write_to_files:
+					success.write("\t".join(str(x) for x in arr) + "\t" + solutions + "\n")
+			else:
+				if write_to_files:
+					failed.write("\t".join(str(x) for x in arr) + "\n")
+
+					
+			total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
+			
+			print("Completed " + str(total) + " sets")
+
+	# Print the final percentage
+	print("Total: %.2f%%" % (count / total * 100))
+
+	# Close files
+	success.close()
+	failed.close()
+
 
 # The main function
 def main ():
 	# test_every_combination()
-	test_all_hands()
+	# test_all_hands()
+	# test_sample()
 	return 0
 
 
