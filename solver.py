@@ -16,12 +16,12 @@ num_cards = 4
 margin_error = 0.00001
 
 
-write_to_files = True
+write_to_files = False
 
 success_file_name = "doable.txt"
 failed_file_name = "notdoable.txt"
 
-total_tests = 10000
+total_tests = 30000
 
 # End Constants to Change
 
@@ -219,7 +219,7 @@ def test_sample():
 					
 			total += 1 # This could be calculated by other means, but since the way we calculate might change, we are leaving this for now
 			
-			print("Completed " + str(total) + " sets")
+		print("Completed " + str(test_num) + " decks")
 
 	# Print the final percentage
 	print("Total: %.2f%%" % (count / total * 100))
@@ -233,7 +233,7 @@ def test_sample():
 def main ():
 	# test_every_combination()
 	# test_all_hands()
-	# test_sample()
+	test_sample()
 	return 0
 
 
