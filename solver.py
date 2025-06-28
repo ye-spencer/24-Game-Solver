@@ -233,7 +233,7 @@ def test_sample():
 def main ():
 	# test_every_combination()
 	# test_all_hands()
-	test_sample()
+	# test_sample()
 	return 0
 
 
