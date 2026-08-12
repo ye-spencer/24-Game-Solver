@@ -6,15 +6,14 @@ A comprehensive solution for analyzing and playing the mathematical card game *2
 
 The 24 Game is a mathematical card game where players use four numbers and basic arithmetic operations (+, -, ×, ÷) to create an expression that equals 24. This project was originally created to settle a family dispute about the percentage of solvable hands, but has evolved into a complete analysis and automation solution.
 
-
 ## Features
 
 ### Statistical Analysis (`solver.py`)
 - **Comprehensive Solvability Testing**: Analyzes all possible card combinations to determine solvability percentages
 - **Multiple Testing Methods**:
-  - **Combination Analysis**: Tests all 716 unique combinations (76.5% solvable)
+  - **Combination Analysis**: Tests all 715 unique combinations (76.5% solvable)
   - **Permutation Analysis**: Tests all 10,000 possible hand orders (83.5% solvable)
-  - **Simulation Analysis**: Simulates 100,000 random game rounds (~85.72% solvable)
+  - **Deck Simulation**: Deals hands from shuffled 40-card decks (four copies of each number 1–10) to mirror actual gameplay (~85.7% solvable)
 - **Solution Generation**: Finds and outputs mathematical expressions that equal 24
 - **Configurable Parameters**: Adjustable number ranges, operations, and testing parameters
 
@@ -30,7 +29,8 @@ The 24 Game is a mathematical card game where players use four numbers and basic
 ### Prerequisites
 - Python 3.7+
 - Chrome browser
-- ChromeDriver (included in `drivers/` directory)
+- ChromeDriver (a Windows build is included in the `drivers/` directory; the bot currently targets Windows)
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) installed and available on your `PATH` (required by `pytesseract`)
 
 ### Setup
 1. Clone or download this repository
@@ -72,9 +72,9 @@ The 24 Game is a mathematical card game where players use four numbers and basic
    - Calculate the optimal solution
    - Execute the moves to solve the puzzle
 
-5. To stop the bot, use a keyboard shortcut (e.g., Windows + I) to intentionally crash the system
+5. To stop the bot, slam the mouse into a corner of the screen to trigger PyAutoGUI's built-in fail-safe, or terminate the process from the terminal
 
-> **⚠️ Important**: The bot requires supervision. Coffee breaks appear randomly and must be clicked manually to prevent crashes.
+> **⚠️ Important**: The bot requires supervision. The site's "coffee break" prompts appear randomly and must be dismissed manually to keep the bot running.
 
 ## Demo
 
@@ -114,11 +114,11 @@ The analysis reveals significant differences in solvability depending on the tes
 
 | Method | Total Tests | Solvable | Percentage |
 |--------|-------------|----------|------------|
-| Unique Combinations | 716 | 548 | 76.5% |
+| Unique Combinations | 715 | 547 | 76.5% |
 | All Permutations | 10,000 | 8,350 | 83.5% |
-| Random Simulation | 100,000 | ~85,720 | ~85.72% |
+| Deck Simulation | 100,000 | ~85,720 | ~85.7% |
 
-I personally settled for an answer of 85% of hands are solvable, as Random Simulation most closely resembles game play.
+Since the deck simulation most closely mirrors how hands are dealt in actual play, roughly **85%** of dealt hands are solvable in practice.
 
 ## Known Issues & Limitations
 
@@ -127,8 +127,9 @@ Some solvable puzzles may be missed due to floating-point arithmetic errors or i
 
 ### Bot Limitations
 - **Coffee Break Detection**: Currently requires manual intervention for coffee breaks
-- **Solution Button**: Does not automatically click "never show solutions" button
-- **Graceful Shutdown**: Relies on system crash for program termination
+- **Solution Button**: Does not automatically click the "never show solutions" button
+- **Graceful Shutdown**: No built-in stop command; the bot must be stopped via PyAutoGUI's fail-safe or by terminating the process
+- **Platform Support**: The bundled ChromeDriver (`chromedriver.exe`) targets Windows
 
 ## Future Improvements
 
